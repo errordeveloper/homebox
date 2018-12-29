@@ -15,8 +15,26 @@
 
 ## Development
 
-1. `linuxkit build homebox.yaml`
-2. `sudo linuxkit run -networking vmnet -mem 2048 homebox`
+1. Create `metadata.json`:
+```JSON
+{
+  "plex": {
+    "entries": {
+      "timezone": {
+        "perm": "0600",
+        "content": "Europe/London"
+      },
+      "plex_claim": {
+        "perm": "0600",
+        "content": "<secret>"
+      }
+    }
+  }
+}
+```
+
+2. `linuxkit build homebox.yaml`
+3. `sudo linuxkit run -networking vmnet -mem 2048 -data-file metadata.json homebox`
 
 We have to use `vmnet` here to allow for access to Plex Media Server.
 However, that only makes it accessible on a local bridge, not on the whole
