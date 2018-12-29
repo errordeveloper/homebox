@@ -48,7 +48,7 @@ services:
     env: # use metadata for TZ and PLEX_CLAIM
     - TZ="Europe/London"
       # https://www.plex.tv/claim/
-    - PLEX_CLAIM="claim-TuqrocGqLSJLYqgRdwnW"
+    - PLEX_CLAIM="<changeMe>"
     # somehow PATH is not the same as with docker run out of the box
     - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 files:
