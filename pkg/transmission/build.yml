@@ -1,0 +1,4 @@
+image: transmission
+config:
+  binds:
+    - /etc/resolv.conf:/etc/resolv.conf
