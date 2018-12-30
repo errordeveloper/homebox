@@ -52,8 +52,8 @@ services:
     env:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dbx
-    uid: dbx
-    gid: users
+    uid: 1000
+    gid: 10000
     image: errordeveloper/dropbox:e57134815d93e8962c8c53407c815bdbeedc1b25
     runtime:
       mkdir:
