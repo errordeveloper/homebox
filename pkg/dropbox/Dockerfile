@@ -32,4 +32,5 @@ RUN useradd -m -g users dbx
 FROM scratch
 COPY --from=build / /
 USER dbx
+WORKDIR /home/dbx
 CMD [ "/opt/dbx/dropboxd" ]
