@@ -17,7 +17,7 @@ onboot:
     image: linuxkit/format:v0.6
   - name: mount
     image: linuxkit/mount:v0.6
-    command: ["/usr/bin/mountie", "/var/lib/plex"]
+    command: ["/usr/bin/mountie", "/var/lib/homebox"]
   - name: mount
     image: linuxkit/mount:v0.6
 services:
