@@ -51,14 +51,15 @@ services:
       - /var/lib/homebox/pms/transcode:/transcode
     env:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  - name: dropbox
-    image: errordeveloper/dropbox:4648336f9abb9c57710be153e1f10599fd8b9886
+  - name: dbx
+    uid: dbx
+    image: errordeveloper/dropbox:a5385ea055139cedbd666cdc0ae0700b998488fa
     runtime:
       mkdir:
-        - /var/lib/homebox/dropbox
+        - /var/lib/homebox/dbx
     binds:
       - /etc/resolv.conf:/etc/resolv.conf
-      - /var/lib/homebox/dropbox:/home/dropbox/Dropbox
+      - /var/lib/homebox/dbx:/home/dbx/Dropbox
 files:
   - path: var/lib/homebox
     directory: true
