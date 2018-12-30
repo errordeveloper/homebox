@@ -51,6 +51,8 @@ services:
      - /var/lib/plex/transcode:/transcode
     env:
     - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  - name: dropbox
+    image: errordeveloper/dropbox:4648336f9abb9c57710be153e1f10599fd8b9886
 files:
   - path: var/lib/plex
     directory: true
