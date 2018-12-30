@@ -1,0 +1,4 @@
+image: dropbox
+config:
+  binds:
+    - /var:/var
