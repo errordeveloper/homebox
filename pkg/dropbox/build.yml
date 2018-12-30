@@ -1,4 +1,7 @@
 image: dropbox
 config:
+  uid: 1000
+  gid: 100
   binds:
-    - /var:/var
+    - /etc/resolv.conf:/etc/resolv.conf
+    - /var/lib/homebox/dbx:/home/dbx/Dropbox

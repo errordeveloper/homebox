@@ -41,6 +41,7 @@ services:
         TZ: "/run/config/pms/timezone"
         PLEX_CLAIM: "/run/config/pms/plex_claim"
       mkdir:
+        # TODO: THIS ALSO DOESN'T HAVE ANY EFFECT
         - /var/lib/homebox/pms/config
         - /var/lib/homebox/pms/data
         - /var/lib/homebox/pms/transcode
@@ -55,10 +56,13 @@ services:
     env:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dbx
-    uid: 1000
-    gid: 100
-    image: errordeveloper/dropbox:e57134815d93e8962c8c53407c815bdbeedc1b25
+    image: errordeveloper/dropbox:5c4ef2c225b8f2b1fccc176d54aaeebd6eb9de3d
+    command:
+      - /bin/bash
+      - -c
+      - while true; do sleep 1; done
     runtime:
+      # TODO: this doesn't actually work yet we need to find a way to mkdir after bind mount
       mkdir:
         # ensure directory is chowned to have corret gid/uid
         - home/dbx/Dropbox
