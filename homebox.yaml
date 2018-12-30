@@ -41,20 +41,26 @@ services:
         TZ: "/run/config/pms/timezone"
         PLEX_CLAIM: "/run/config/pms/plex_claim"
       mkdir:
-      - /var/lib/plex/config
-      - /var/lib/plex/data
-      - /var/lib/plex/transcode
+      - /var/lib/homebox/pms/config
+      - /var/lib/homebox/pms/data
+      - /var/lib/homebox/pms/transcode
     binds:
      - /etc/resolv.conf:/etc/resolv.conf
-     - /var/lib/plex/config:/config
-     - /var/lib/plex/data:/data
-     - /var/lib/plex/transcode:/transcode
+     - /var/lib/homebox/pms/config:/config
+     - /var/lib/homebox/pms/data:/data
+     - /var/lib/homebox/pms/transcode:/transcode
     env:
     - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dropbox
     image: errordeveloper/dropbox:4648336f9abb9c57710be153e1f10599fd8b9886
+    runtime:
+      mkdir:
+      - /var/lib/homebox/dropbox
+    binds:
+     - /etc/resolv.conf:/etc/resolv.conf
+     - /var/lib/homebox/dropbox:/home/dropbox/Dropbox
 files:
-  - path: var/lib/plex
+  - path: var/lib/homebox
     directory: true
 trust:
   org:
