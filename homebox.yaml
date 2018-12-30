@@ -2,7 +2,7 @@ kernel:
   image: linuxkit/kernel:4.14.90
   cmdline: "console=tty0 console=ttyS0 console=ttyAMA0 console=ttysclp0"
 init:
-  - linuxkit/init:a41f86e8e5ca8552e9ede89a2af705f833aff969
+  - linuxkit/init:b2066f277482d02b8232c7b8520d52a66a7940c3
   - linuxkit/runc:83d0edb4552b1a5df1f0976f05f442829eac38fe
   - linuxkit/containerd:326b096cd5fbab0f864e52721d036cade67599d6
   - linuxkit/ca-certificates:v0.6
@@ -46,18 +46,22 @@ services:
         - /var/lib/homebox/pms/transcode
     binds:
       - /etc/resolv.conf:/etc/resolv.conf
-      - /var/lib/homebox/pms/config:/config
+      # this will probably become same as the dropbox dir
       - /var/lib/homebox/pms/data:/data
+      # config may get stored in the cotnainer image or metadata
+      - /var/lib/homebox/pms/config:/config
+      # this may become just tmpfs
       - /var/lib/homebox/pms/transcode:/transcode
     env:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dbx
     uid: 1000
-    gid: 10000
+    gid: 100
     image: errordeveloper/dropbox:e57134815d93e8962c8c53407c815bdbeedc1b25
     runtime:
       mkdir:
-        - /var/lib/homebox/dbx
+        # ensure directory is chowned to have corret gid/uid
+        - home/dbx/Dropbox
     binds:
       - /etc/resolv.conf:/etc/resolv.conf
       - /var/lib/homebox/dbx:/home/dbx/Dropbox
