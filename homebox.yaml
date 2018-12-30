@@ -62,6 +62,11 @@ services:
       mkdir:
         # ensure directory is chowned to have corret gid/uid
         - home/dbx/Dropbox
+        # these seem to make it crash when missing
+        - home/dbx/Dropbox/.dropbox.cache
+        - home/dbx/Dropbox/.dropbox.cache/attrs_cache
+        - home/dbx/Dropbox/.dropbox.cache/placeholder_cache
+        - home/dbx/Dropbox/.dropbox.cache/prefetch_cache
     binds:
       - /etc/resolv.conf:/etc/resolv.conf
       - /var/lib/homebox/dbx:/home/dbx/Dropbox
