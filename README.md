@@ -33,8 +33,8 @@
 }
 ```
 
-2. `linuxkit build homebox.yaml`
-3. `sudo linuxkit run -networking vmnet -mem 2048 -data-file metadata.json homebox`
+2. `make`
+3. `./run.sh`
 
 We have to use `vmnet` here to allow for access to Plex Media Server.
 However, that only makes it accessible on a local bridge, not on the whole
