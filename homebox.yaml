@@ -78,10 +78,7 @@ services:
   - name: dbx
     image: errordeveloper/dropbox:af6954a9cf00054da9dbfbb3a7b4ca907a239940
   - name: transmission
-    image: errordeveloper/transmission:6475355f5e483b47484b3916e41b8f47d41be0fa
-    binds:
-      # we will move this to metadata or the container image later
-      - /var/lib/homebox/.transmission/config:/home/transmission/.config/transmission-daemon
+    image: errordeveloper/transmission:1b33bd3e7e8803f3976cb289b56729d68e47e615
 files:
   - path: var/lib/homebox
     directory: true

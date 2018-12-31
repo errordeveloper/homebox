@@ -5,3 +5,5 @@ config:
   binds:
     - /etc/resolv.conf:/etc/resolv.conf
     - /var/lib/homebox/Downloads:/home/transmission/Downloads
+    # we will move this to metadata or the container image later
+    - /var/lib/homebox/.transmission/config:/home/transmission/.config/transmission-daemon
