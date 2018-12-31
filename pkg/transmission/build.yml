@@ -4,3 +4,4 @@ config:
   gid: 100
   binds:
     - /etc/resolv.conf:/etc/resolv.conf
+    - /var/lib/homebox/Downloads:/home/transmission/Downloads
