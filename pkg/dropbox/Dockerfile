@@ -30,6 +30,8 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.dropbox
 RUN useradd --create-home --gid 100 --uid 1000 dbx
 
 FROM scratch
+ENTRYPOINT []
 COPY --from=build / /
-WORKDIR /home/dbx
-CMD [ "/opt/dbx/dropboxd" ]
+ENV HOME=/home/dbx
+WORKDIR $HOME
+CMD ["/opt/dbx/dropboxd"]
