@@ -4,8 +4,9 @@
 ## Features
 
 - Plex Media Server
-- (todo) Dropbox
-- (todo) other apps
+- Dropbox
+- Transmission
+- (todo) other apps and storage management
 
 ## Ideas
 
@@ -33,7 +34,7 @@
 }
 ```
 
-2. `make`
+2. `make build-pkgs && make image`
 3. `./run.sh`
 
 We have to use `vmnet` here to allow for access to Plex Media Server.
