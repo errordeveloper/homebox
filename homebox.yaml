@@ -17,6 +17,7 @@ onboot:
     image: linuxkit/format:v0.6
   - name: mount
     image: linuxkit/mount:v0.6
+    # TODO: need something more sophisticated here, especially when we decide on storage
     command:
       - sh
       - -c
@@ -43,7 +44,7 @@ services:
   - name: pms
     # https://hub.docker.com/r/plexinc/pms-docker/tags
     image: plexinc/pms-docker:1.14.1.5488-cc260c476
-    capabilities: [all] # todo: refine this
+    capabilities: [all] # TODO: refine this
     net: host
     runtime:
       envFromFile:
