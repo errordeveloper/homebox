@@ -1,4 +1,6 @@
 image: transmission
 config:
+  uid: 1000
+  gid: 100
   binds:
     - /etc/resolv.conf:/etc/resolv.conf

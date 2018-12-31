@@ -9,9 +9,12 @@ RUN apk add --no-cache --initdb -p /out \
     && true
 RUN mv /out/etc/apk/repositories.upstream /out/etc/apk/repositories
 
+# also: transmission-cli?
 RUN apk add --no-cache -p /out \
     transmission-daemon \
     && true
+
+RUN useradd --create-home --gid 100 --uid 1000 transmission
 
 FROM scratch
 ENTRYPOINT []
