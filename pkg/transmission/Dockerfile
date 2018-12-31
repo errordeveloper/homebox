@@ -14,7 +14,7 @@ RUN apk add --no-cache -p /out \
     transmission-daemon \
     && true
 
-RUN useradd --create-home --gid 100 --uid 1000 transmission
+RUN adduser -D -g 100 -u 1000 transmission
 
 FROM scratch
 ENTRYPOINT []
