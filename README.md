@@ -34,7 +34,7 @@
 }
 ```
 
-2. `make build-pkgs && make image`
+2. `make image`
 3. `./run.sh`
 
 We have to use `vmnet` here to allow for access to Plex Media Server.
