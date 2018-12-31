@@ -18,18 +18,24 @@ onboot:
   - name: mount
     image: linuxkit/mount:v0.6
     # TODO: need something more sophisticated here, especially when we decide on storage
+    capabilities: [CAP_SYS_ADMIN, CAP_CHOWN]
     command:
       - sh
       - -c
       - >
-        mountie /var/lib/homebox
-        mkdir -p /var/lib/homebox/Downloads
-        mkdir -p /var/lib/homebox/Dropbox
-        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache
-        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/attrs_cache
-        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/placeholder_cache
-        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/prefetch_cache
-        chown 1000:100 -R /var/lib/homebox
+        mountie /var/lib/homebox ;
+        mkdir -p /var/lib/homebox/.pms ;
+        mkdir -p /var/lib/homebox/.pms/data ;
+        mkdir -p /var/lib/homebox/.pms/config ;
+        mkdir -p /var/lib/homebox/.transmission ;
+        mkdir -p /var/lib/homebox/.transmission/config ;
+        mkdir -p /var/lib/homebox/Downloads ;
+        mkdir -p /var/lib/homebox/Dropbox ;
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache ;
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/attrs_cache ;
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/placeholder_cache ;
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/prefetch_cache ;
+        chown 1000:100 -R /var/lib/homebox ;
 services:
   - name: getty
     image: linuxkit/getty:2eb742cd7a68e14cf50577c02f30147bc406e478
@@ -45,6 +51,7 @@ services:
     # https://hub.docker.com/r/plexinc/pms-docker/tags
     image: plexinc/pms-docker:1.14.1.5488-cc260c476
     capabilities: [all] # TODO: refine this
+    # TODO: move it to bridged network
     net: host
     runtime:
       envFromFile:
@@ -52,15 +59,29 @@ services:
         PLEX_CLAIM: "/run/config/pms/plex_claim"
     binds:
       - /etc/resolv.conf:/etc/resolv.conf
-      - /var/lib/homebox:/data
-      # config may get stored in the cotnainer image or metadata
-      #- /var/lib/homebox/pms/config:/config
-      # this may become just tmpfs
-      #- /var/lib/homebox/pms/transcode:/transcode
+      # /config has the actual index of the libraries etc
+      - /var/lib/homebox/.pms/config:/config
+      # /data has misc data and the media library
+      - /var/lib/homebox/.pms/data:/data
+      - /var/lib/homebox/Downloads:/data/Downloads
+      - /var/lib/homebox/Dropbox:/data/Dropbox
+    # /transcode can be mounted at tempfs, as keeping it
+    # inside the container maybe not be so wise
+    # TODO: identify long-term solution
+    tmpfs: [/transcode]
     env:
+      - PLEX_UID=1000
+      - PLEX_GID=100
+      - CHANGE_CONFIG_DIR_OWNERSHIP=false
+      #- ALLOWED_NETWORKS=192.168.1.0/24,172.16.0.0/16
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dbx
-    image: errordeveloper/dropbox:5c4ef2c225b8f2b1fccc176d54aaeebd6eb9de3d
+    image: errordeveloper/dropbox:af6954a9cf00054da9dbfbb3a7b4ca907a239940
+  - name: transmission
+    image: errordeveloper/transmission:6475355f5e483b47484b3916e41b8f47d41be0fa
+    binds:
+      # we will move this to metadata or the container image later
+      - /var/lib/homebox/.transmission/config:/home/transmission/.config/transmission-daemon
 files:
   - path: var/lib/homebox
     directory: true
