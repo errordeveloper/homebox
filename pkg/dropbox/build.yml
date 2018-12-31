@@ -4,4 +4,4 @@ config:
   gid: 100
   binds:
     - /etc/resolv.conf:/etc/resolv.conf
-    - /var/lib/homebox/dbx:/home/dbx/Dropbox
+    - /var/lib/homebox/Dropbox:/home/dbx/Dropbox

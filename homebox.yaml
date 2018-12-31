@@ -17,9 +17,18 @@ onboot:
     image: linuxkit/format:v0.6
   - name: mount
     image: linuxkit/mount:v0.6
-    command: ["/usr/bin/mountie", "/var/lib/homebox"]
-  - name: mount
-    image: linuxkit/mount:v0.6
+    command:
+      - sh
+      - -c
+      - >
+        mountie /var/lib/homebox
+        mkdir -p /var/lib/homebox/Downloads
+        mkdir -p /var/lib/homebox/Dropbox
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/attrs_cache
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/placeholder_cache
+        mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/prefetch_cache
+        chown 1000:100 -R /var/lib/homebox
 services:
   - name: getty
     image: linuxkit/getty:2eb742cd7a68e14cf50577c02f30147bc406e478
@@ -40,40 +49,17 @@ services:
       envFromFile:
         TZ: "/run/config/pms/timezone"
         PLEX_CLAIM: "/run/config/pms/plex_claim"
-      mkdir:
-        # TODO: THIS ALSO DOESN'T HAVE ANY EFFECT
-        - /var/lib/homebox/pms/config
-        - /var/lib/homebox/pms/data
-        - /var/lib/homebox/pms/transcode
     binds:
       - /etc/resolv.conf:/etc/resolv.conf
-      # this will probably become same as the dropbox dir
-      - /var/lib/homebox/pms/data:/data
+      - /var/lib/homebox:/data
       # config may get stored in the cotnainer image or metadata
-      - /var/lib/homebox/pms/config:/config
+      #- /var/lib/homebox/pms/config:/config
       # this may become just tmpfs
-      - /var/lib/homebox/pms/transcode:/transcode
+      #- /var/lib/homebox/pms/transcode:/transcode
     env:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dbx
     image: errordeveloper/dropbox:5c4ef2c225b8f2b1fccc176d54aaeebd6eb9de3d
-    command:
-      - /bin/bash
-      - -c
-      - while true; do sleep 1; done
-    runtime:
-      # TODO: this doesn't actually work yet we need to find a way to mkdir after bind mount
-      mkdir:
-        # ensure directory is chowned to have corret gid/uid
-        - home/dbx/Dropbox
-        # these seem to make it crash when missing
-        - home/dbx/Dropbox/.dropbox.cache
-        - home/dbx/Dropbox/.dropbox.cache/attrs_cache
-        - home/dbx/Dropbox/.dropbox.cache/placeholder_cache
-        - home/dbx/Dropbox/.dropbox.cache/prefetch_cache
-    binds:
-      - /etc/resolv.conf:/etc/resolv.conf
-      - /var/lib/homebox/dbx:/home/dbx/Dropbox
 files:
   - path: var/lib/homebox
     directory: true
