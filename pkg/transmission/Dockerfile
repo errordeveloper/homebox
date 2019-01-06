@@ -19,7 +19,7 @@ RUN adduser -D -g 100 -u 1000 transmission
 FROM scratch
 ENTRYPOINT []
 COPY --from=mirror /out/ /
-# COPY config/ /home/transmission/.config/transmission-daemon/
+COPY config/ /home/transmission/.config/transmission-daemon/
 ENV HOME=/home/transmission
 WORKDIR $HOME
 CMD ["transmission-daemon", "--foreground"]

@@ -5,5 +5,7 @@ config:
   binds:
     - /etc/resolv.conf:/etc/resolv.conf
     - /var/lib/homebox/Downloads:/home/transmission/Downloads
-    # we will move this to metadata or the container image later
-    - /var/lib/homebox/.transmission/config:/home/transmission/.config/transmission-daemon
+    # settings.json is built into the image, the state directories are in the persistent shared volume
+    - /var/lib/homebox/.transmission/torrents:/home/transmission/.config/transmission-daemon/torrents
+    - /var/lib/homebox/.transmission/resume:/home/transmission/.config/transmission-daemon/resume
+    - /var/lib/homebox/.transmission/blocklist:/home/transmission/.config/transmission-daemon/blocklist

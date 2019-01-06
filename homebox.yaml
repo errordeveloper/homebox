@@ -28,7 +28,9 @@ onboot:
         mkdir -p /var/lib/homebox/.pms/data ;
         mkdir -p /var/lib/homebox/.pms/config ;
         mkdir -p /var/lib/homebox/.transmission ;
-        mkdir -p /var/lib/homebox/.transmission/config ;
+        mkdir -p /var/lib/homebox/.transmission/torrents ;
+        mkdir -p /var/lib/homebox/.transmission/resume ;
+        mkdir -p /var/lib/homebox/.transmission/blocklist ;
         mkdir -p /var/lib/homebox/Downloads ;
         mkdir -p /var/lib/homebox/Dropbox ;
         mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache ;
@@ -78,7 +80,7 @@ services:
   - name: dbx
     image: errordeveloper/dropbox:af6954a9cf00054da9dbfbb3a7b4ca907a239940
   - name: transmission
-    image: errordeveloper/transmission:1b33bd3e7e8803f3976cb289b56729d68e47e615
+    image: errordeveloper/transmission:e767093045f76a98c90058fd8f992832bd6b8e25
 files:
   - path: var/lib/homebox
     directory: true
