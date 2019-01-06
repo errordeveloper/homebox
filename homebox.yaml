@@ -79,8 +79,10 @@ services:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dbx
     image: errordeveloper/dropbox:af6954a9cf00054da9dbfbb3a7b4ca907a239940
+    net: host
   - name: transmission
     image: errordeveloper/transmission:e767093045f76a98c90058fd8f992832bd6b8e25
+    net: host
 files:
   - path: var/lib/homebox
     directory: true
