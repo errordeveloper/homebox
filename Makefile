@@ -1,5 +1,5 @@
 image:
-	./linuxkit build -disable-content-trust homebox.yaml
+	./linuxkit/bin/linuxkit build -disable-content-trust homebox.yaml
 
 build-pkgs: build-pkg-dropbox build-pkg-transmission
 push-pkgs: push-pkg-dropbox push-pkg-transmission
