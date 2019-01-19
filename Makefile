@@ -17,3 +17,10 @@ push-pkg-dropbox:
 
 push-pkg-transmission:
 	docker push $(shell linuxkit pkg show-tag -org errordeveloper pkg/transmission)
+
+push-all:
+	docker push errordeveloper/kernel
+	docker push errordeveloper/zfs-kmod
+	docker push errordeveloper/init
+	docker push errordeveloper/transmission
+	docker push errordeveloper/dropbox
