@@ -1,6 +1,9 @@
 image:
 	./linuxkit/bin/linuxkit build -disable-content-trust homebox.yaml
 
+image-zfs-dev:
+	./linuxkit/bin/linuxkit build -disable-content-trust homebox-zfs-dev.yaml
+
 build-pkgs: build-pkg-dropbox build-pkg-transmission
 push-pkgs: push-pkg-dropbox push-pkg-transmission
 
