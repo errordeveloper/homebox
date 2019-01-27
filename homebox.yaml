@@ -14,17 +14,17 @@ onboot:
     image: linuxkit/sysctl:v0.6
   - name: sysfs
     image: linuxkit/sysfs:v0.6
-  - name: format
-    image: linuxkit/format:v0.6
-  - name: mount
-    image: linuxkit/mount:v0.6
-    # TODO: need something more sophisticated here, especially when we decide on storage
+  - name: modprobe
+    image: linuxkit/modprobe:v0.6
+    command: ["modprobe", "zfs"]
+  - name: zfs
+    image: errordeveloper/zfs:d1d42423946511b546c92ebdf8d24b1257984a99
     capabilities: [CAP_SYS_ADMIN, CAP_CHOWN]
     command:
       - sh
       - -c
       - >
-        mountie /var/lib/homebox ;
+        zpool import homebox ;
         mkdir -p /var/lib/homebox/.pms ;
         mkdir -p /var/lib/homebox/.pms/data ;
         mkdir -p /var/lib/homebox/.pms/config ;
@@ -50,6 +50,8 @@ services:
     image: linuxkit/dhcpcd:v0.6
   - name: ntpd
     image: linuxkit/openntpd:v0.6
+  - name: sshd
+    image: linuxkit/sshd:c4bc89cf0d66733c923ab9cb46198b599eb99320
   - name: pms
     # https://hub.docker.com/r/plexinc/pms-docker/tags
     image: plexinc/pms-docker:1.14.1.5488-cc260c476
@@ -85,6 +87,10 @@ services:
     image: errordeveloper/transmission:e767093045f76a98c90058fd8f992832bd6b8e25
     net: host
 files:
+  - path: root/.ssh/authorized_keys
+    source: ~/.ssh/id_rsa.pub
+    mode: "0600"
+    optional: true
   - path: var/lib/homebox
     directory: true
 trust:
