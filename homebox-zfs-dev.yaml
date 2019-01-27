@@ -53,7 +53,13 @@ services:
     image: linuxkit/dhcpcd:v0.6
   - name: ntpd
     image: linuxkit/openntpd:v0.6
+  - name: sshd
+    image: linuxkit/sshd:c4bc89cf0d66733c923ab9cb46198b599eb99320
 files:
+  - path: root/.ssh/authorized_keys
+    source: ~/.ssh/id_rsa.pub
+    mode: "0600"
+    optional: true
   - path: var/lib/homebox
     directory: true
 trust:
