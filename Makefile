@@ -1,8 +1,17 @@
-image:
-	./linuxkit/bin/linuxkit build -disable-content-trust homebox.yaml
+BUILD_IMG_ARGS := -disable-content-trust
 
-image-zfs-dev:
-	./linuxkit/bin/linuxkit build -disable-content-trust homebox-zfs-dev.yaml
+image: BUILD_IMG_SPEC := homebox.yaml
+image: do-build-img
+image-bios: BUILD_IMG_ARGS += -format raw-bios
+image-bios: image
+
+image-zfs-dev: BUILD_IMG_SPEC := homebox-zfs-dev.yaml
+image-zfs-dev: do-build-img
+image-zfs-dev-bios: BUILD_IMG_ARGS += -format raw-bios
+image-zfs-dev-bios: image-zfs-dev
+
+do-build-img:
+	./linuxkit/bin/linuxkit build $(BUILD_IMG_ARGS) $(BUILD_IMG_SPEC)
 
 build-pkgs: build-pkg-dropbox build-pkg-transmission
 push-pkgs: push-pkg-dropbox push-pkg-transmission
