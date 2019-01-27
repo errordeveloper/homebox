@@ -14,6 +14,9 @@ onboot:
     image: linuxkit/sysctl:v0.6
   - name: sysfs
     image: linuxkit/sysfs:v0.6
+  - name: modprobe
+    image: linuxkit/modprobe:v0.6
+    command: ["modprobe", "zfs"]
   #- name: format
   #- image: linuxkit/format:v0.6
   #- name: mount
