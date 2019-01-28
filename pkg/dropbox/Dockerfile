@@ -20,18 +20,18 @@ RUN apt-get -qqy install \
     && true
 RUN apt-get -qqy autoclean
 
-RUN echo y | dropbox start -i && dropbox stop && mv /root/.dropbox-dist /opt/dbx
+RUN echo y | dropbox start -i && dropbox stop && mv /root/.dropbox-dist /opt/dropbox-dist
 
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.dropbox
 
 # We could use `useradd -s /usr/sbin/nologin`, but that makes container hard to debug
 # and it's not very clear if we will have to do that a lot or not. If we forbid logins,
 # we should probably get rid of the Python CLI also.
-RUN useradd --create-home --gid 100 --uid 1000 dbx
+RUN useradd --create-home --gid 100 --uid 1000 user
 
 FROM scratch
 ENTRYPOINT []
 COPY --from=build / /
-ENV HOME=/home/dbx
+ENV HOME=/home/user
 WORKDIR $HOME
-CMD ["/opt/dbx/dropboxd"]
+CMD ["/opt/dropbox-dist/dropboxd"]

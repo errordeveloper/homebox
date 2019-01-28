@@ -14,12 +14,12 @@ RUN apk add --no-cache -p /out \
     transmission-daemon \
     && true
 
-RUN adduser -D -g 100 -u 1000 transmission
+RUN adduser -D -g 100 -u 1000 user
 
 FROM scratch
 ENTRYPOINT []
 COPY --from=mirror /out/ /
-COPY config/ /home/transmission/.config/transmission-daemon/
-ENV HOME=/home/transmission
+COPY config/ /home/user/.config/transmission-daemon/
+ENV HOME=/home/user
 WORKDIR $HOME
 CMD ["transmission-daemon", "--foreground"]

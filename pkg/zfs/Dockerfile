@@ -13,7 +13,7 @@ RUN apk add --no-cache -p /out \
     zfs \
     && true
 
-RUN adduser -D -g 100 -u 1000 homebox
+RUN adduser -D -g 100 -u 1000 user
 
 FROM scratch
 ENTRYPOINT []
