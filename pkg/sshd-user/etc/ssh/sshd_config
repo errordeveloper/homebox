@@ -1,0 +1,42 @@
+AddressFamily any
+ListenAddress 0.0.0.0
+Protocol 2
+
+HostKey /tmp/etc/ssh/ssh_host_rsa_key
+HostKey /tmp/etc/ssh/ssh_host_dsa_key
+HostKey /tmp/etc/ssh/ssh_host_ecdsa_key
+HostKey /tmp/etc/ssh/ssh_host_ed25519_key
+
+SyslogFacility AUTH
+LogLevel INFO
+
+#LoginGraceTime 2m
+#PermitRootLogin prohibit-password
+StrictModes yes
+MaxAuthTries 6
+MaxSessions 10
+
+PubkeyAuthentication yes
+
+AuthorizedKeysFile	.ssh/authorized_keys
+
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+
+AllowAgentForwarding no
+AllowTcpForwarding yes
+GatewayPorts no
+X11Forwarding no
+PermitTTY yes
+PrintMotd yes
+TCPKeepAlive yes
+PermitUserEnvironment no
+Compression delayed
+ClientAliveInterval 0
+ClientAliveCountMax 3
+UseDNS no
+MaxStartups 10:30:100
+PermitTunnel no
+ChrootDirectory none
+VersionAddendum none

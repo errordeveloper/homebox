@@ -1,0 +1,4 @@
+Welcome to homebox!
+
+The namespace you are currently in not root.
+System services are namespaced; to access, use `ctr -n services.linuxkit ...`

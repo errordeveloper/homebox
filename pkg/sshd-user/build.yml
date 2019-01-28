@@ -1,0 +1,12 @@
+image: sshd-user
+config:
+  uid: 1000
+  gid: 100
+  pid: new
+  binds:
+    - /etc/resolv.conf:/etc/resolv.conf
+    - /run:/run
+    - /var/log:/var/log
+    - /dev:/dev
+    - /sys:/sys
+    - /var/lib/homebox:/var/lib/homebox
