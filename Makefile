@@ -1,3 +1,5 @@
+# TODO: setup content trust
+
 BUILD_IMG_ARGS := -disable-content-trust
 
 image: BUILD_IMG_SPEC := homebox.yaml
@@ -13,22 +15,19 @@ image-zfs-dev-bios: image-zfs-dev
 do-build-img:
 	./linuxkit/bin/linuxkit build $(BUILD_IMG_ARGS) $(BUILD_IMG_SPEC)
 
-build-pkgs: build-pkg-dropbox build-pkg-transmission
-push-pkgs: push-pkg-dropbox push-pkg-transmission
+build-pkgs: build-pkg-dropbox build-pkg-transmission build-pkg-zfs
 
-# TODO: setup content trust
+build-pkg-dropbox: BUILD_PKG_NAME := dropbox
+build-pkg-dropbox: do-build-pkg
 
-build-pkg-dropbox:
-	env DOCKER_BUILDKIT=1 linuxkit pkg build -org errordeveloper -network pkg/dropbox
+build-pkg-transmission: BUILD_PKG_NAME := transmission
+build-pkg-transmission: do-build-pkg
 
-build-pkg-transmission:
-	env DOCKER_BUILDKIT=1 linuxkit pkg build -org errordeveloper -network pkg/transmission
+build-pkg-zfs: BUILD_PKG_NAME := zfs
+build-pkg-zfs: do-build-pkg
 
-push-pkg-dropbox:
-	docker push $(shell linuxkit pkg show-tag -org errordeveloper pkg/dropbox)
-
-push-pkg-transmission:
-	docker push $(shell linuxkit pkg show-tag -org errordeveloper pkg/transmission)
+do-build-pkg:
+	env DOCKER_BUILDKIT=1 linuxkit pkg build -org errordeveloper -network pkg/$(BUILD_PKG_NAME)
 
 push-all:
 	docker push errordeveloper/kernel
@@ -36,3 +35,4 @@ push-all:
 	docker push errordeveloper/init
 	docker push errordeveloper/transmission
 	docker push errordeveloper/dropbox
+	docker push errordeveloper/zfs
