@@ -80,7 +80,7 @@ services:
       - CHANGE_CONFIG_DIR_OWNERSHIP=false
       #- ALLOWED_NETWORKS=192.168.1.0/24,172.16.0.0/16
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  - name: dbx
+  - name: dropbox
     image: errordeveloper/dropbox:af6954a9cf00054da9dbfbb3a7b4ca907a239940
     net: host
   - name: transmission
