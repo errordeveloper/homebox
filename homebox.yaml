@@ -53,7 +53,7 @@ services:
   - name: sshd-root
     image: errordeveloper/sshd-root:ef18b647ec14e9f564e6d1ba4348b849ddb3d25c
   - name: sshd-user
-    image: errordeveloper/sshd-user:2e47a54bc104c3c7d8d89957ac85da7b3f125bf5
+    image: errordeveloper/sshd-user:522aa4f11c165d540a7277840e33bf24608db98f
   - name: pms
     # https://hub.docker.com/r/plexinc/pms-docker/tags
     image: plexinc/pms-docker:1.14.1.5488-cc260c476

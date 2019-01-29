@@ -7,6 +7,4 @@ config:
     - /etc/resolv.conf:/etc/resolv.conf
     - /run:/run
     - /var/log:/var/log
-    - /dev:/dev
-    - /sys:/sys
     - /var/lib/homebox:/var/lib/homebox
