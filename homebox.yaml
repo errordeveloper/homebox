@@ -86,7 +86,7 @@ services:
     image: errordeveloper/dropbox:a6eead1a675921ff7b9c0d04fb0e35ee7ae3ea29
     net: host
   - name: transmission
-    image: errordeveloper/transmission:8be696ce966be7dcd7134d64f7ef365808954cfc
+    image: errordeveloper/transmission:8050fe583b725dc951b678de01f4259a76352884
     net: host
 files:
   - path: var/lib/homebox
