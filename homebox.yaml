@@ -18,7 +18,7 @@ onboot:
     image: linuxkit/modprobe:v0.6
     command: ["modprobe", "zfs"]
   - name: zfs
-    image: errordeveloper/zfs:d1d42423946511b546c92ebdf8d24b1257984a99
+    image: errordeveloper/zfs:3e2170a50107322947f8023df260e7fc3a33f0c0
     capabilities: [CAP_SYS_ADMIN, CAP_CHOWN]
     command:
       - sh
@@ -50,8 +50,10 @@ services:
     image: linuxkit/dhcpcd:v0.6
   - name: ntpd
     image: linuxkit/openntpd:v0.6
-  - name: sshd
-    image: linuxkit/sshd:c4bc89cf0d66733c923ab9cb46198b599eb99320
+  - name: sshd-root
+    image: errordeveloper/sshd-root:ef18b647ec14e9f564e6d1ba4348b849ddb3d25c
+  - name: sshd-user
+    image: errordeveloper/sshd-user:2e47a54bc104c3c7d8d89957ac85da7b3f125bf5
   - name: pms
     # https://hub.docker.com/r/plexinc/pms-docker/tags
     image: plexinc/pms-docker:1.14.1.5488-cc260c476
@@ -81,10 +83,10 @@ services:
       #- ALLOWED_NETWORKS=192.168.1.0/24,172.16.0.0/16
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dropbox
-    image: errordeveloper/dropbox:af6954a9cf00054da9dbfbb3a7b4ca907a239940
+    image: errordeveloper/dropbox:a6eead1a675921ff7b9c0d04fb0e35ee7ae3ea29
     net: host
   - name: transmission
-    image: errordeveloper/transmission:e767093045f76a98c90058fd8f992832bd6b8e25
+    image: errordeveloper/transmission:8be696ce966be7dcd7134d64f7ef365808954cfc
     net: host
 files:
   - path: root/.ssh/authorized_keys
