@@ -18,7 +18,7 @@ MaxSessions 10
 
 PubkeyAuthentication yes
 
-AuthorizedKeysFile	.ssh/authorized_keys
+AuthorizedKeysFile /run/config/sshd/authorized_keys
 
 PasswordAuthentication no
 PermitEmptyPasswords no

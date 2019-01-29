@@ -51,9 +51,9 @@ services:
   - name: ntpd
     image: linuxkit/openntpd:v0.6
   - name: sshd-root
-    image: errordeveloper/sshd-root:ef18b647ec14e9f564e6d1ba4348b849ddb3d25c
+    image: errordeveloper/sshd-root:23f81109583cf184dbe5785c9d040a111c66328b
   - name: sshd-user
-    image: errordeveloper/sshd-user:522aa4f11c165d540a7277840e33bf24608db98f
+    image: errordeveloper/sshd-user:3134bfb1f34bf8baf7b8943bad5ea664fc96a3ec
   - name: pms
     # https://hub.docker.com/r/plexinc/pms-docker/tags
     image: plexinc/pms-docker:1.14.1.5488-cc260c476
@@ -89,10 +89,6 @@ services:
     image: errordeveloper/transmission:8be696ce966be7dcd7134d64f7ef365808954cfc
     net: host
 files:
-  - path: root/.ssh/authorized_keys
-    source: ~/.ssh/id_rsa.pub
-    mode: "0600"
-    optional: true
   - path: var/lib/homebox
     directory: true
 trust:
