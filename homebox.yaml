@@ -51,9 +51,9 @@ services:
   - name: ntpd
     image: linuxkit/openntpd:v0.6
   - name: sshd-root
-    image: errordeveloper/sshd-root:23f81109583cf184dbe5785c9d040a111c66328b
+    image: errordeveloper/sshd-root:1c4ac88ac704fc5e222f5a93d116292328e92915
   - name: sshd-user
-    image: errordeveloper/sshd-user:3134bfb1f34bf8baf7b8943bad5ea664fc96a3ec
+    image: errordeveloper/sshd-user:32624c6b0009049fba6710410707184b83975998
   - name: pms
     # https://hub.docker.com/r/plexinc/pms-docker/tags
     image: plexinc/pms-docker:1.14.1.5488-cc260c476
