@@ -16,7 +16,7 @@ onboot:
     image: linuxkit/sysfs:v0.6
   - name: modprobe
     image: linuxkit/modprobe:v0.6
-    command: ["modprobe", "zfs"]
+    command: ["modprobe", "zfs", "usb_storage"]
   - name: zfs
     image: errordeveloper/zfs:3e2170a50107322947f8023df260e7fc3a33f0c0
     capabilities: [CAP_SYS_ADMIN, CAP_CHOWN]
