@@ -44,3 +44,4 @@ push-all:
 	docker push errordeveloper/zfs
 	docker push errordeveloper/sshd-root
 	docker push errordeveloper/sshd-user
+	docker push errordeveloper/metadata

@@ -9,7 +9,7 @@ init:
   - linuxkit/ca-certificates:v0.6
 onboot:
   - name: metadata
-    image: linuxkit/metadata:v0.6
+    image: errordeveloper/metadata:259dcb46582003b1dccfeb770c6edae104d19e27
   - name: sysctl
     image: linuxkit/sysctl:v0.6
   - name: sysfs
