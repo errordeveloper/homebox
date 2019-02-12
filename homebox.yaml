@@ -8,15 +8,15 @@ init:
   - linuxkit/containerd:326b096cd5fbab0f864e52721d036cade67599d6
   - linuxkit/ca-certificates:v0.6
 onboot:
-  - name: metadata
-    image: errordeveloper/metadata:1712acdebf198bc6462565f13d421259bfb49d90 # https://github.com/linuxkit/linuxkit/pull/3280
   - name: sysctl
     image: linuxkit/sysctl:v0.6
   - name: sysfs
     image: linuxkit/sysfs:v0.6
   - name: modprobe
     image: linuxkit/modprobe:v0.6
-    command: ["modprobe", "zfs", "usb_storage"]
+    command: ["modprobe", "-a", "zfs", "usb_storage"]
+  - name: metadata
+    image: errordeveloper/metadata:9250ccfc8a4ba879989281b5f782bae2551521b9 # https://github.com/linuxkit/linuxkit/pull/3280
   - name: zfs
     image: errordeveloper/zfs:3e2170a50107322947f8023df260e7fc3a33f0c0
     capabilities: [CAP_SYS_ADMIN, CAP_CHOWN]
