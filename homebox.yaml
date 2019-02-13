@@ -12,9 +12,20 @@ onboot:
     image: linuxkit/sysctl:v0.6
   - name: sysfs
     image: linuxkit/sysfs:v0.6
-  - name: modprobe
+  - name: modprobe-zfs
     image: linuxkit/modprobe:v0.6
-    command: ["modprobe", "-a", "zfs", "usb_storage"]
+    command: ["modprobe", "zfs"]
+  - name: modprobe-usb-storage
+    image: linuxkit/modprobe:v0.6
+    command: ["modprobe", "usb-storage"]
+  - name: wait-usb-storage
+    image: linuxkit/alpine:3683c9a66cd4da40bd7d6c7da599b2dcd738b559
+    binds:
+      - /dev:/dev
+    command:
+      - sh
+      - -c
+      - until test -b /dev/sdc ; do sleep 1 ; done
   - name: metadata
     image: errordeveloper/metadata:9250ccfc8a4ba879989281b5f782bae2551521b9 # https://github.com/linuxkit/linuxkit/pull/3280
   - name: zfs
