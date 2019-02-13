@@ -6,6 +6,8 @@ image: BUILD_IMG_SPEC := homebox.yaml
 image: do-build-img
 image-bios: BUILD_IMG_ARGS += -format raw-bios
 image-bios: image
+image-tar: BUILD_IMG_ARGS += -format tar
+image-tar: image
 
 image-zfs-dev: BUILD_IMG_SPEC := homebox-zfs-dev.yaml
 image-zfs-dev: do-build-img
