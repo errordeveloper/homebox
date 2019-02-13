@@ -7,10 +7,6 @@ set -x
 IMGFILE=$PWD/disk.img
 ESP_FILE=$PWD/boot.img
 
-SQAUSHFS=/tmp/rootfs.img
-KERNEL="$(find . -name kernel)"
-CMDLINE_FILE="$(find . -name cmdline)"
-CMDLINE="$(cat $CMDLINE_FILE)"
 
 # we want everything except the final result to stderr
 ( exec 1>&2;
@@ -27,18 +23,18 @@ cd /tmp/rootfs
 cd /tmp
 
 # build squashfs img file
-mksquashfs rootfs $SQAUSHFS
+#mksquashfs rootfs /tmp/rootfs.img
 
 cat >> syslinux.cfg <<EOF
 DEFAULT linux
 LABEL linux
     KERNEL /kernel
-    APPEND ${CMDLINE} toram=rootfs.img
+    APPEND $(cat /tmp/rootfs/boot/cmdline) toram=rootfs.img
 EOF
 
 # now build an img file
-KERNEL_FILE_SIZE=$(stat -c %s "$KERNEL")
-SQAUSHFS_FILE_SIZE=$(stat -c %s "$SQAUSHFS")
+KERNEL_FILE_SIZE=$(stat -c %s /tmp/rootfs/boot/kernel)
+SQAUSHFS_FILE_SIZE=$(stat -c %s /tmp/rootfs.img)
 # minimum headroom needed in ESP, in bytes
 # 511KiB headroom seems to be enough
 ESP_HEADROOM=$(( 1024 * 1024 ))
@@ -55,11 +51,11 @@ ESP_FILE_SIZE_SECTORS=$(( $ESP_FILE_SIZE_KB * 2 ))
 
 # create a raw disk with an EFI boot partition
 # Stuff it into a FAT filesystem, making it as small as possible.
-mkfs.vfat -v -C $ESP_FILE $(( $ESP_FILE_SIZE_KB )) > /dev/null
+mkfs.vfat -v -C $ESP_FILE $(( $ESP_FILE_SIZE_SECTORS )) > /dev/null
 echo "mtools_skip_check=1" >> /etc/mtools.conf && \
 mcopy -i $ESP_FILE syslinux.cfg ::/
-mcopy -i $ESP_FILE $KERNEL ::/kernel
-mcopy -i $ESP_FILE $SQAUSHFS ::/rootfs.img
+mcopy -i $ESP_FILE /tmp/rootfs/boot/kernel ::/kernel
+mcopy -i $ESP_FILE /tmp/rootfs.img ::/rootfs.img
 
 # install syslinux
 syslinux --install $ESP_FILE
@@ -84,6 +80,9 @@ echo ","$ESP_FILE_SIZE_SECTORS",;" | sfdisk $IMGFILE
 
 # of course, "one large partition" means minus the 2048 at the beginning
 ESP_SECTOR_START=2048
+
+## TODO: separate the `dd` calls out, so that they can be run dyrectly against
+## physical target, when needed (i.e. on the host, instead of the container)
 
 # copy in our EFI System Partition image
 dd if=$ESP_FILE of=$IMGFILE bs=$BLKSIZE count=$ESP_FILE_SIZE_SECTORS conv=notrunc seek=$ESP_SECTOR_START
