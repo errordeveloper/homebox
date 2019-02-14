@@ -23,13 +23,16 @@ cd /tmp/rootfs
 cd /tmp
 
 # build squashfs img file
-#mksquashfs rootfs /tmp/rootfs.img
+rm -f /tmp/rootfs.img
+mksquashfs rootfs /tmp/rootfs.img
+
+cmdline="$(cat /tmp/rootfs/boot/cmdline) boot=live toram=rootfs.img root=/dev/sda1"
 
 cat >> syslinux.cfg <<EOF
 DEFAULT linux
 LABEL linux
     KERNEL /kernel
-    APPEND $(cat /tmp/rootfs/boot/cmdline) toram=rootfs.img
+    APPEND ${cmdline}
 EOF
 
 # now build an img file
@@ -51,6 +54,7 @@ ESP_FILE_SIZE_SECTORS=$(( $ESP_FILE_SIZE_KB * 2 ))
 
 # create a raw disk with an EFI boot partition
 # Stuff it into a FAT filesystem, making it as small as possible.
+rm -f $ESP_FILE
 mkfs.vfat -v -C $ESP_FILE $(( $ESP_FILE_SIZE_SECTORS )) > /dev/null
 echo "mtools_skip_check=1" >> /etc/mtools.conf && \
 mcopy -i $ESP_FILE syslinux.cfg ::/
