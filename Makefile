@@ -9,10 +9,11 @@ image-bios: image
 image-tar: BUILD_IMG_ARGS += -format tar
 image-tar: image
 
-image-zfs-dev: BUILD_IMG_SPEC := homebox-zfs-dev.yaml
-image-zfs-dev: do-build-img
-image-zfs-dev-bios: BUILD_IMG_ARGS += -format raw-bios
-image-zfs-dev-bios: image-zfs-dev-bios
+image-minimal-test: BUILD_IMG_SPEC := minimal-test.yaml
+image-minimal-test: do-build-img
+#image-minimal-test-tar: BUILD_IMG_ARGS := -format tar-kernel-initrd
+image-minimal-test-tar: BUILD_IMG_ARGS := -format tar
+image-minimal-test-tar: image-minimal-test
 
 do-build-img:
 	./linuxkit/bin/linuxkit build $(BUILD_IMG_ARGS) $(BUILD_IMG_SPEC)
