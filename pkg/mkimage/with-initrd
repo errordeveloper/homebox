@@ -1,104 +1,104 @@
-#!/bin/sh
+#!/bin/bash
 
-set -e
+set -x
 
-# for debugging
-[ -n "$DEBUG" ] && set -x
+set -o errexit
+set -o pipefail
+set -o nounset
 
-IMGFILE=$PWD/disk.img
+kernel="$(realpath "${1}")"
+initrd="$(realpath "${2}")"
+append="$(cat ${3})"
 
+disk_image="${PWD}/disk.img"
 
-# we want everything except the final result to stderr
-( exec 1>&2;
+cd /tmp
 
-ESP_FILE=$PWD/boot.img
+esp_file="/tmp/boot.img"
 
+#cat > syslinux.cfg <<EOF
+#DEFAULT linux
+#LABEL linux
+#    KERNEL /kernel
+#    APPEND ${append}
+#    INITRD /initrd.img
+#EOF
 
-mkdir -p /tmp/bios
-cd /tmp/bios
-
-# input is a tarball of filesystem on stdin with kernel in /boot
-# output is an iso on stdout
-
-# extract. BSD tar auto recognises compression, unlike GNU tar
-# only if stdin is a tty, if so need files volume mounted...
-[ -t 0 ] || bsdtar xzf -
-
-INITRD="$(find . -name '*.img')"
-KERNEL="$(find . -name kernel)"
-CMDLINE_FILE="$(find . -name cmdline)"
-CMDLINE="$(cat $CMDLINE_FILE )"
-
-
-cat >> syslinux.cfg <<EOF
-DEFAULT linux
-LABEL linux
-    KERNEL /kernel
-    INITRD /initrd.img
-    APPEND ${CMDLINE}
-EOF
-
-# now build an img file
-KERNEL_FILE_SIZE=$(stat -c %s "$KERNEL")
-INITRD_FILE_SIZE=$(stat -c %s "$INITRD")
+kernel_file_size="$(stat -c %s "${kernel}")"
+initrd_file_size="$(stat -c %s "${initrd}")"
 # minimum headroom needed in ESP, in bytes
 # 511KiB headroom seems to be enough
-ESP_HEADROOM=$(( 1024 * 1024 ))
+blksize=512
+onemb=$(( 1024 * 1024 ))
 
-
-ESP_FILE_SIZE=$(( $KERNEL_FILE_SIZE + $INITRD_FILE_SIZE + $ESP_HEADROOM ))
+esp_file_size=$(( $kernel_file_size + $initrd_file_size + $onemb ))
 # (x+1024)/1024*1024 rounds up to multiple of 1024KB, or 2048 sectors
 # some firmwares get confused if the partitions are not aligned on 2048 blocks
 # we will round up to the nearest multiple of 2048 blocks
 # since each block is 512 bytes, we want the size to be a multiple of
 # 2048 blocks * 512 bytes = 1048576 bytes = 1024KB
-ESP_FILE_SIZE_KB=$(( ( ( ($ESP_FILE_SIZE+1024-1) / 1024 ) + 1024-1) / 1024 * 1024 ))
-# and for sectors
-ESP_FILE_SIZE_SECTORS=$(( $ESP_FILE_SIZE_KB * 2 ))
+esp_file_size_kb=$(( ( ( ($esp_file_size+1023)/ 1024 ) + 1023 ) / 1024 * 1024 ))
+esp_file_size_sectors=$(( $esp_file_size_kb * 2 ))
 
 # create a raw disk with an EFI boot partition
 # Stuff it into a FAT filesystem, making it as small as possible.
-mkfs.vfat -v -C $ESP_FILE $(( $ESP_FILE_SIZE_KB )) > /dev/null
-echo "mtools_skip_check=1" >> /etc/mtools.conf && \
-mcopy -i $ESP_FILE syslinux.cfg ::/
-mcopy -i $ESP_FILE $KERNEL ::/kernel
-mcopy -i $ESP_FILE $INITRD ::/initrd.img
+rm -f $esp_file
+#mkfs.vfat -v -C $esp_file $(( $esp_file_size_kb )) > /dev/null
+mkfs.ext4 $esp_file $(( $esp_file_size_sectors ))
+
+mkdir -p /tmp/bootfs
+mount -o loop $esp_file /tmp/bootfs
+mkdir /tmp/bootfs/boot
+cp $kernel /tmp/bootfs/boot/kernel
+cp $initrd /tmp/bootfs/boot/initrd
+mkdir /tmp/bootfs/boot/grub
+cat > /tmp/bootfs/boot/grub/grub.cfg <<EOF
+insmod linux
+insmod ext2
+
+#menuentry '[loopback]linux' {
+#	linux (loop)/boot/kernel $append
+#	initrd (loop)/boot/initrd
+#}
+EOF
+
+#export MTOOLS_SKIP_CHECK=1
+#
+#mcopy -i $esp_file syslinux.cfg ::/
+#mcopy -i $esp_file $kernel ::/kernel
+#mcopy -i $esp_file $initrd ::/initrd.img
 
 # install syslinux
-syslinux --install $ESP_FILE
+#syslinux --install $esp_file
+#extlinux --install /tmp/bootfs
 
 # now make our actual filesystem image
 # how big an image do we want?
 # it should be the size of our ESP file+1MB for BIOS boot + 1MB for MBR + 1MB for backup
-ONEMB=$(( 1024 * 1024 ))
-SIZE_IN_BYTES=$(( $(stat -c %s "$ESP_FILE") + 4*$ONEMB ))
+esp_file_size_bytes=$(( $(stat -c %s "${esp_file}") + 4*$onemb ))
 
 # and make sure the ESP is bootable for BIOS mode
 # settings
-BLKSIZE=512
-MB_BLOCKS=$(( $SIZE_IN_BYTES / $ONEMB ))
+mb_blocks=$(( $esp_file_size_bytes / $onemb ))
 
 # make the image
-dd if=/dev/zero of=$IMGFILE bs=1M count=$MB_BLOCKS
+rm -f $disk_image
+dd if=/dev/zero of=$disk_image bs=1M count=$mb_blocks
 
-
-echo "w" | fdisk $IMGFILE || true
+echo "w" | fdisk $disk_image || true
 # format one large partition of the apprropriate size
-echo ","$ESP_FILE_SIZE_SECTORS",;" | sfdisk $IMGFILE
+echo ","$esp_file_size_sectors",;" | sfdisk $disk_image
 
 # of course, "one large partition" means minus the 2048 at the beginning
-ESP_SECTOR_START=2048
-
+esp_sector_start=2048
+ 
 # copy in our EFI System Partition image
-dd if=$ESP_FILE of=$IMGFILE bs=$BLKSIZE count=$ESP_FILE_SIZE_SECTORS conv=notrunc seek=$ESP_SECTOR_START
-
-# install mbr
-#dd if=/usr/share/syslinux/mbr.bin of="$IMGFILE" bs=440 count=1 conv=notrunc
-dd if=/usr/share/syslinux/altmbr.bin bs=439 count=1 conv=notrunc of=$IMGFILE
-printf '\1' | dd bs=1 count=1 seek=439 conv=notrunc of=$IMGFILE
-
-sfdisk -A "$IMGFILE" 1
-
-)
-
-cat $IMGFILE
+dd if=$esp_file of=$disk_image bs=$blksize count=$esp_file_size_sectors conv=notrunc seek=$esp_sector_start
+grub-install --target=i386-pc --recheck --boot-directory=/tmp/bootfs/boot $disk_image
+umount /tmp/bootfs
+ 
+## # install mbr
+## dd if=/usr/share/syslinux/altmbr.bin bs=439 count=1 conv=notrunc of=$disk_image
+## printf '\1' | dd bs=1 count=1 seek=439 conv=notrunc of=$disk_image
+## 
+## sfdisk -A "$disk_image" 1

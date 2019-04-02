@@ -28,7 +28,7 @@ mksquashfs rootfs /tmp/rootfs.img
 
 cmdline="$(cat /tmp/rootfs/boot/cmdline) boot=live toram=rootfs.img root=/dev/sda1"
 
-cat >> syslinux.cfg <<EOF
+cat > syslinux.cfg <<EOF
 DEFAULT linux
 LABEL linux
     KERNEL /kernel
