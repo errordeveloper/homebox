@@ -64,7 +64,7 @@ services:
   - name: sshd-user
     image: errordeveloper/sshd-user:32624c6b0009049fba6710410707184b83975998
   - name: pms
-    image: errordeveloper/pms:7fe402c2bf20a96eab251ab5de3941f85f5af6b5
+    image: errordeveloper/pms:cfa1acca8dcdee3fea45973e01f2ecbede3e2959
     net: host
   #- name: pms
   #  # https://hub.docker.com/r/plexinc/pms-docker/tags
@@ -98,7 +98,7 @@ services:
     image: errordeveloper/dropbox:f1e3d8e1633d06369591ac35aecb87370571f6ff
     net: host
   - name: transmission
-    image: errordeveloper/transmission:477b0d4947528398f6abd05bea14b99ee02ab588
+    image: errordeveloper/transmission:613a52315f3d9948350da8a052a865f87517db7c
     net: host
 files:
   - path: var/lib/homebox

@@ -66,4 +66,4 @@ ENV PLEX_UID=1000
 ENV PLEX_GID=100
 ENV TMPDIR="/tmp"
 ENV LD_LIBRARY_PATH="${PLEX_MEDIA_SERVER_HOME}"
-CMD ["/usr/lib/plexmediaserver/Plex\ Media\ Server"]
+CMD ["/usr/lib/plexmediaserver/Plex Media Server"]
