@@ -49,15 +49,21 @@ RUN chmod +x /sbin/tini
 # and it's not very clear if we will have to do that a lot or not. If we forbid logins,
 # we should probably get rid of the Python CLI also.
 RUN useradd --create-home --gid 100 --uid 1000 user
+ENV PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="/home/user/Library/Application Support"
+RUN mkdir -p ${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}
 #COPY Preferences.xml /etc/Preferences.xml
-#RUN mkdir -p /home/user/Library/Application\ Support/Plex\ Media\ Server/ && mv /etc/Preferences.xml /home/user/Library/Application\ Support/Plex\ Media\ Server/
-#RUN chown 1000:100 -R /home/user/Library
+#RUN mv /etc/Preferences.xml /home/user/Library/Application\ Support/Plex\ Media\ Server/
+RUN chown 1000:100 -R /home/user/Library
 
 FROM scratch
 ENTRYPOINT ["/sbin/tini", "--"]
 COPY --from=build / /
 ENV HOME=/home/user
-WORKDIR $HOME
+ENV PLEX_MEDIA_SERVER_HOME=/usr/lib/plexmediaserver
+WORKDIR ${PLEX_MEDIA_SERVER_HOME}
+ENV PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=6
 ENV PLEX_UID=1000
 ENV PLEX_GID=100
-CMD ["/usr/sbin/start_pms"]
+ENV TMPDIR="/tmp"
+ENV LD_LIBRARY_PATH="${PLEX_MEDIA_SERVER_HOME}"
+CMD ["/usr/lib/plexmediaserver/Plex\ Media\ Server"]
