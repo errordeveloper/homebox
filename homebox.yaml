@@ -66,38 +66,41 @@ services:
   - name: sshd-user
     image: errordeveloper/sshd-user:32624c6b0009049fba6710410707184b83975998
   - name: pms
-    # https://hub.docker.com/r/plexinc/pms-docker/tags
-    image: plexinc/pms-docker:1.14.1.5488-cc260c476
-    capabilities: [all] # TODO: refine this
-    # TODO: move it to bridged network
+    image: errordeveloper/pms:2e6ea26e5a8da702cb28fb58e5320431bde592a1
     net: host
-    runtime:
-      envFromFiles: # https://github.com/linuxkit/linuxkit/pull/3254
-        TZ: "/run/config/pms/timezone"
-        PLEX_CLAIM: "/run/config/pms/plex_claim"
-    binds:
-      - /etc/resolv.conf:/etc/resolv.conf
-      # /config has the actual index of the libraries etc
-      - /var/lib/homebox/.pms/config:/config
-      # /data has misc data and the media library
-      - /var/lib/homebox/.pms/data:/data
-      - /var/lib/homebox/Downloads:/data/Downloads
-      - /var/lib/homebox/Dropbox:/data/Dropbox
-    # /transcode can be mounted at tempfs, as keeping it
-    # inside the container maybe not be so wise
-    # TODO: identify long-term solution
-    tmpfs: [/transcode]
-    env:
-      - PLEX_UID=1000
-      - PLEX_GID=100
-      - CHANGE_CONFIG_DIR_OWNERSHIP=false
-      #- ALLOWED_NETWORKS=192.168.1.0/24,172.16.0.0/16
-      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  #- name: pms
+  #  # https://hub.docker.com/r/plexinc/pms-docker/tags
+  #  image: plexinc/pms-docker:1.14.1.5488-cc260c476
+  #  capabilities: [all] # TODO: refine this
+  #  # TODO: move it to bridged network
+  #  net: host
+  #  runtime:
+  #    envFromFiles: # https://github.com/linuxkit/linuxkit/pull/3254
+  #      TZ: "/run/config/pms/timezone"
+  #      PLEX_CLAIM: "/run/config/pms/plex_claim"
+  #  binds:
+  #    - /etc/resolv.conf:/etc/resolv.conf
+  #    # /config has the actual index of the libraries etc
+  #    - /var/lib/homebox/.pms/config:/config
+  #    # /data has misc data and the media library
+  #    - /var/lib/homebox/.pms/data:/data
+  #    - /var/lib/homebox/Downloads:/data/Downloads
+  #    - /var/lib/homebox/Dropbox:/data/Dropbox
+  #  # /transcode can be mounted at tempfs, as keeping it
+  #  # inside the container maybe not be so wise
+  #  # TODO: identify long-term solution
+  #  tmpfs: [/transcode]
+  #  env:
+  #    - PLEX_UID=1000
+  #    - PLEX_GID=100
+  #    - CHANGE_CONFIG_DIR_OWNERSHIP=false
+  #    #- ALLOWED_NETWORKS=192.168.1.0/24,172.16.0.0/16
+  #    - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   - name: dropbox
-    image: errordeveloper/dropbox:a6eead1a675921ff7b9c0d04fb0e35ee7ae3ea29
+    image: errordeveloper/dropbox:f1e3d8e1633d06369591ac35aecb87370571f6ff
     net: host
   - name: transmission
-    image: errordeveloper/transmission:8050fe583b725dc951b678de01f4259a76352884
+    image: errordeveloper/transmission:477b0d4947528398f6abd05bea14b99ee02ab588
     net: host
 files:
   - path: var/lib/homebox
