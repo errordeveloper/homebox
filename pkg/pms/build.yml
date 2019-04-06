@@ -1,0 +1,11 @@
+image: pms
+config:
+  uid: 1000
+  gid: 100
+  capabilities: [all] # TODO: refine this
+  tmpfs: [/transcode]
+  binds:
+    - /etc/resolv.conf:/etc/resolv.conf
+    - /var/lib/homebox/Library:/home/user/Library
+    - /var/lib/homebox/Downloads:/home/user/Downloads
+    - /var/lib/homebox/Dropbox:/home/user/Dropbox
