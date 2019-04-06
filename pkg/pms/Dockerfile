@@ -9,7 +9,6 @@ RUN apt-get -qqy install \
     ca-certificates \
     curl \
     procps \
-    tini \
     tzdata \
     uuid-runtime \
     && true
@@ -42,6 +41,10 @@ RUN apt-get -qqy autoclean
 
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.dropbox
 
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
+RUN chmod +x /sbin/tini
+
 # We could use `useradd -s /usr/sbin/nologin`, but that makes container hard to debug
 # and it's not very clear if we will have to do that a lot or not. If we forbid logins,
 # we should probably get rid of the Python CLI also.
@@ -51,10 +54,10 @@ RUN useradd --create-home --gid 100 --uid 1000 user
 #RUN chown 1000:100 -R /home/user/Library
 
 FROM scratch
-ENTRYPOINT []
+ENTRYPOINT ["/sbin/tini", "--"]
 COPY --from=build / /
 ENV HOME=/home/user
 WORKDIR $HOME
 ENV PLEX_UID=1000
 ENV PLEX_GID=100
-CMD ["/sbin/tini", "/usr/sbin/start_pms"]
+CMD ["/usr/sbin/start_pms"]

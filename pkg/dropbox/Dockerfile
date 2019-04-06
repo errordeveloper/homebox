@@ -17,13 +17,17 @@ RUN apt-get -qqy install \
     ca-certificates \
     dropbox \
     python-gpg \
-    tini \
     && true
 RUN apt-get -qqy autoclean
+
 
 RUN echo y | dropbox start -i && dropbox stop && mv /root/.dropbox-dist /opt/dropbox-dist
 
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.dropbox
+
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
+RUN chmod +x /sbin/tini
 
 # We could use `useradd -s /usr/sbin/nologin`, but that makes container hard to debug
 # and it's not very clear if we will have to do that a lot or not. If we forbid logins,
@@ -31,8 +35,8 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.dropbox
 RUN useradd --create-home --gid 100 --uid 1000 user
 
 FROM scratch
-ENTRYPOINT []
+ENTRYPOINT ["/sbin/tini", "--"]
 COPY --from=build / /
 ENV HOME=/home/user
 WORKDIR $HOME
-CMD ["/sbin/tini", "/opt/dropbox-dist/dropboxd"]
+CMD ["/opt/dropbox-dist/dropboxd"]
