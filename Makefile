@@ -41,14 +41,16 @@ build-pkg-zfs: do-build-pkg
 do-build-pkg:
 	env DOCKER_BUILDKIT=1 linuxkit pkg build -org errordeveloper -network pkg/$(BUILD_PKG_NAME)
 
-push-all:
+push-pkgs:
 	docker push errordeveloper/dropbox
-	docker push errordeveloper/init
-	docker push errordeveloper/kernel
-	docker push errordeveloper/metadata
 	docker push errordeveloper/pms
 	docker push errordeveloper/sshd-root
 	docker push errordeveloper/sshd-user
 	docker push errordeveloper/transmission
 	docker push errordeveloper/zfs
+
+push-all: push-pkgs
+	docker push errordeveloper/init
+	docker push errordeveloper/kernel
+	docker push errordeveloper/metadata
 	docker push errordeveloper/zfs-kmod

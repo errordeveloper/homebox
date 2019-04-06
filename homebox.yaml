@@ -29,21 +29,19 @@ onboot:
   - name: metadata
     image: errordeveloper/metadata:9250ccfc8a4ba879989281b5f782bae2551521b9 # https://github.com/linuxkit/linuxkit/pull/3280
   - name: zfs
-    image: errordeveloper/zfs:3e2170a50107322947f8023df260e7fc3a33f0c0
-    capabilities: [CAP_SYS_ADMIN, CAP_CHOWN]
+    image: errordeveloper/zfs:ef5cc7bf5f3f7516308918a7fabb313f28423134
     command:
       - sh
       - -c
       - >
         zpool import homebox ;
-        mkdir -p /var/lib/homebox/.pms ;
-        mkdir -p /var/lib/homebox/.pms/data ;
-        mkdir -p /var/lib/homebox/.pms/config ;
         mkdir -p /var/lib/homebox/.transmission ;
         mkdir -p /var/lib/homebox/.transmission/torrents ;
         mkdir -p /var/lib/homebox/.transmission/resume ;
         mkdir -p /var/lib/homebox/.transmission/blocklist ;
         mkdir -p /var/lib/homebox/Downloads ;
+        mkdir -p /var/lib/homebox/Library ;
+        mkdir -p /var/lib/homebox/Library/Application\ Support ;
         mkdir -p /var/lib/homebox/Dropbox ;
         mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache ;
         mkdir -p /var/lib/homebox/Dropbox/.dropbox.cache/attrs_cache ;
@@ -66,7 +64,7 @@ services:
   - name: sshd-user
     image: errordeveloper/sshd-user:32624c6b0009049fba6710410707184b83975998
   - name: pms
-    image: errordeveloper/pms:2e6ea26e5a8da702cb28fb58e5320431bde592a1
+    image: errordeveloper/pms:7fe402c2bf20a96eab251ab5de3941f85f5af6b5
     net: host
   #- name: pms
   #  # https://hub.docker.com/r/plexinc/pms-docker/tags

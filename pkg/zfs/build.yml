@@ -4,8 +4,7 @@ config:
     - /dev:/dev
     - /var:/var:rshared,rbind
     - /:/hostroot
-  capabilities:
-    - CAP_SYS_ADMIN
+  capabilities: [all]
   rootfsPropagation: shared
   net: new
   ipc: new
