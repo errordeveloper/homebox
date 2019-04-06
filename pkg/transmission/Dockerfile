@@ -18,9 +18,9 @@ RUN apk add --no-cache -p /out \
 RUN adduser -D -g 100 -u 1000 user
 
 FROM scratch
-ENTRYPOINT []
+ENTRYPOINT ["/sbin/tini", "--"]
 COPY --from=mirror /out/ /
 COPY config/ /home/user/.config/transmission-daemon/
 ENV HOME=/home/user
 WORKDIR $HOME
-CMD ["/sbin/tini" "/usr/bin/transmission-daemon", "--foreground"]
+CMD ["/usr/bin/transmission-daemon", "--foreground"]
