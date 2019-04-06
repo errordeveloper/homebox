@@ -6,6 +6,7 @@ RUN apk add --no-cache --initdb -p /out \
     busybox \
     ca-certificates \
     musl \
+    tini \
     && true
 RUN mv /out/etc/apk/repositories.upstream /out/etc/apk/repositories
 
@@ -22,4 +23,4 @@ COPY --from=mirror /out/ /
 COPY config/ /home/user/.config/transmission-daemon/
 ENV HOME=/home/user
 WORKDIR $HOME
-CMD ["transmission-daemon", "--foreground"]
+CMD ["/sbin/tini" "/usr/bin/transmission-daemon", "--foreground"]

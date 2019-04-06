@@ -15,8 +15,9 @@ COPY dropbox.asc /etc/apt/trusted.gpg.d/dropbox.asc
 RUN apt-get -qqy update 
 RUN apt-get -qqy install \
     ca-certificates \
-    python-gpg \
     dropbox \
+    python-gpg \
+    tini \
     && true
 RUN apt-get -qqy autoclean
 
@@ -34,4 +35,4 @@ ENTRYPOINT []
 COPY --from=build / /
 ENV HOME=/home/user
 WORKDIR $HOME
-CMD ["/opt/dropbox-dist/dropboxd"]
+CMD ["/sbin/tini", "/opt/dropbox-dist/dropboxd"]
