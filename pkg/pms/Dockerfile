@@ -8,6 +8,8 @@ RUN apt-get -qqy install \
     apt-transport-https \
     ca-certificates \
     curl \
+    procps \
+    tini \
     tzdata \
     uuid-runtime \
     && true
@@ -44,12 +46,15 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.dropbox
 # and it's not very clear if we will have to do that a lot or not. If we forbid logins,
 # we should probably get rid of the Python CLI also.
 RUN useradd --create-home --gid 100 --uid 1000 user
-COPY Preferences.xml /etc/Preferences.xml
-RUN mkdir -p /home/user/Library/Application\ Support/Plex\ Media\ Server/ && mv /etc/Preferences.xml /home/user/Library/Application\ Support/Plex\ Media\ Server/
+#COPY Preferences.xml /etc/Preferences.xml
+#RUN mkdir -p /home/user/Library/Application\ Support/Plex\ Media\ Server/ && mv /etc/Preferences.xml /home/user/Library/Application\ Support/Plex\ Media\ Server/
+#RUN chown 1000:100 -R /home/user/Library
 
 FROM scratch
 ENTRYPOINT []
 COPY --from=build / /
 ENV HOME=/home/user
 WORKDIR $HOME
-CMD ["/usr/sbin/start_pms"]
+ENV PLEX_UID=1000
+ENV PLEX_GID=100
+CMD ["/sbin/tini", "/usr/sbin/start_pms"]
